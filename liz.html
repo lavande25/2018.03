@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>canvas粒子效果</title>
+  <style>
+	canvas{
+		background:black;
+	}
+  </style>
+ </head>
+ <body>
+		 <canvas id='cav' width='500' height='500'></canvas>
+ </body>
+ <script>	
+		//js当中获取当前窗口宽高
+
+	
+
+		var cav=document.getElementById('cav');
+		var canvasWidth=window.innerWidth; 
+		var canvasHeight=window.innerHeight;
+		var ctx=cav.getContext('2d'); 
+		var granules=[]; //数组也是容器，不过装的东西多了一些
+
+		 init();
+
+		 //初始化工作
+		 function init(){
+			
+			cav.width=canvasWidth; //设置画布宽度 
+			cav.height=canvasHeight;
+		    setInterval(loop,40); //一秒钟执行一下，匿名函数
+		 }
+
+		 //专门用来生成圆。并且是不停的生成
+		 function loop(){
+			 //利用了定时器，随机生成粒子
+
+			ctx.clearRect(0,0,canvasWidth,canvasHeight); //清除画布
+
+	        var granule=new Granule(canvasWidth*0.5,canvasHeight*0.5); //固定的位置
+			   
+				granule.xvel=Math.random()*8-4; //让我们当前位置进行一个左右摆动,正数以及负数 （正数就往右移，负数就往左移）
+			
+				
+			//把现在生成的粒子，加入到数组当中去，等一下要更改每一个粒子（圆的位置）
+			granules.push(granule)
+
+		    
+			//调用每一个对象的方法,有多少个对象，就循环多少次
+			for(var i=0;i<granules.length;i++){
+					granules[i].render(); //调用每个对象当中的方法，随机生成
+					granules[i].update(); //更新位置
+			 }
+
+			 if(granules.length>400){ //如果大于了50个就清除掉多余的值
+				 granules.shift();//弹出当前数组当中的第一个元素
+				//slice(0,长度)
+			 }
+
+		 }
+
+		
+		//画一些粒子，画一些圆出来
+		 function Granule(xPos,yPos){
+			 this.xPos=xPos; //X轴
+			 this.yPos=yPos; //y轴 
+
+			 this.yvel=-5; //每次都在原有基础再加上一个值，y轴位置
+			 this.xvel=0;
+	
+
+			 this.render=function(){ //生成圆的方法
+				//填充渐变色
+			  var grad=ctx.createLinearGradient(0,0,0,canvasHeight); //创建渐变色
+				  grad.addColorStop(0,'red');
+				  grad.addColorStop(0.5,'green');
+				  grad.addColorStop(1,'blue');
+
+				ctx.fillStyle=grad; //填充渐变
+			    ctx.beginPath(); //路径开始
+			    ctx.arc(this.xPos,this.yPos,5,0,Math.PI*2,true);
+			    ctx.closePath();
+			    ctx.fill(); //填充圆
+			 } 
+			
+
+			 this.update=function(){ //控制圆移动的方法
+				  this.yvel+=0.1; //-5+0.1=-4.9  4.8  1 2 慢慢的累加数值，这是重力 
+				  this.yPos+=this.yvel; //你在这里修改，是会更改
+				  this.xPos+=this.xvel; //动态改变x轴位置
+			 }
+ 
+		 
+		 }
+			
+
+</script>
+
+</html>
