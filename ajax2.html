@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+	<table id="mytable">
+
+	</table>
+ 
+<script src="1.js"></script>
+<script>
+	$.ajax({
+		url:"http://baisong.tunnel.qydev.com/zTreeStudy/queryUserList",
+		type:"POST",
+		data:{},
+		dataType:"JSON",
+		success:function(res){
+			console.log(res);
+			var arr  = eval(res);
+			console.log(arr);
+			var _html="";
+			for(var i=0;i<arr.length;i++){
+				_html+='<tr><td>用户ID:'+arr[i].id+'</td><td>用户名:'+arr[i].userName+'</td>'+
+				'<td>邮箱:'+arr[i].email+'</td><td>用户密码:'+arr[i].password+'</td><td>创建时间:'+arr[i].createTime+'</td></tr>'
+			}
+			$("#mytable").html(_html);
+		},
+		error:function(err){
+			console.log(err);
+		}
+	})
+</script>
+</body>
+</html>
